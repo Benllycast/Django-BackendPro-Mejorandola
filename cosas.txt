@@ -1,0 +1,173 @@
+recursos
+    plugin djaneiro para sublimetext
+    cache de pip para archivos descargados
+        export PIP_DOWNLOAD_CACHE=$HOME/.pip_download_cache
+    restconlose: aplicaion de chrome para verificar api rest.
+    django-mocups: para datos de ejemplo
+    bpython para una mejor consola
+
+python manage.py createsuperuser:
+    crea un nuevo usuario
+list_display
+list_filter
+search_fields
+list_display
+imagenes en campo
+    crear uan funcion en el admin que retorne el tag de la imagen
+    agregarle a la funcion( como un objeto ) la propiedad .allow_tags = True
+ordenar por un campo
+    agregar a un campo de una funcion del AdminModel la propiedad .admin_order_field = '<nombre del campo>'
+campos booleanos
+    crear una funcion en el model que retorne un booleano y le marca la propiedad .boolean = True para que dajngo lo tome como un campo booleano y aparescan imagenes
+list_editable
+    no puede estar el primer campo a menos que este list_display_links (indica el campo que contendra el enlace de edicion)
+actions
+    acciones nuevas en la barra de busqueda de admin
+raw_id_fields
+    cambia la edicion de campos foraneos con un ventana 
+inlines
+    poder adminsitra muchos objetos que esten relacionados a un modelo
+filter_(horizontal|vertical)
+    agregar objetos relacionados mediante un widget vertica|horizontal
+context proscessor
+se usan para replicar datos en todas las plantillas desde un solo lugar.
+    escribir el processador de contexto y depsues registrarlo en el settings.py .
+    utilizar render en vez de render_to_response y pasrle el request que es donde estan las variables de los context processor.
+
+Middleware
+    combiar el comportamiento de la entrada/salida de la aplicacion Django
+    usos: cambiar, agregar, eliminar datos o variables HTTP
+    pasos:
+    1- crear el middleware en una clase y el metodo process_(request|response) segun sea entrada o salida.
+    registrarlo en settings.py en la seccion de MIDDLEWARE_CLASSES
+
+Clase base view
+    objetivo: simplicar las cosas y no repetir codigo de las vistas
+    1 templateview
+    2 Class view
+        CreateView
+        UpdateView
+        DeleteView
+    3 rediret view
+
+pruebas
+    fines de semanas felices
+    tipos:
+        logicas(o de modelos)
+        pruebas de vistas
+            prueba minima de codigo
+
+API REST en Django
+    trbaja bajo metodos HTTP + URL de recursos
+    porque una api:
+        exponer los datos de aplicacion a otros programas.
+        facilitar el desarrollo del frontend.
+        crear arquitecturas oriendatas a servicios.
+    como:
+        intalar dajngorestframework
+            pip install djangorestframework
+        crear un archivo para los serializasdores en la app (serializer.py).
+        crear alas clases con los meta y campos de los modelos a serializar
+        En las vistas crear las vistas de clase que hereden de viewsets.ModelViewSet y agregarle el queryset y la serializer_class
+        En las urls, importar el router y registrar las vistas de los serializadores.
+        Agregar la url a las api e incluir el router.urls
+
+ARCHIVOS ESTATICOS
+    nunca servir archivos staticos desde django
+    cada aplicacion puede tener sus propios archivos staticos
+    como los trabaja:
+        1. hardcode de url en las templates
+        2. por {{STATIC_URL}}
+        3. template tag:
+            {% load static from staticfiles %}
+            "{% satic %}"arch.***
+        como se hace
+            configurar el STATIC_ROOT
+            agregar los respectivos tag en las plantillas
+    ARCHIVOS STICOS CACHEADOS
+        incluir la setting
+            STATICFILES_STORAGE
+    STATICOS EN AmazonS3
+        instalar django_storages, django-boto, boto, python-boto(?).
+        agregar en settings:
+            DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+            AWS_ACCESS_KEY_ID = ...
+            AWS_SECRET_ACCESS_KEY = ...
+            STATIC_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+            AWS_STORAGE_BUCEKT_NAME = '****'
+            DEBUG = False
+OPTIMIZACION POR CACHE
+    mejorar respuesta de servidor
+    cuales: memcache, redis
+    instalar: dajngo-redis-cache, hiredis
+    cuando usarlo: cundo se demora en traer o calcular informacion
+    tipos:
+        1- low level (mirar context_processesors)
+        2- per view (mirar viewa)
+        3- per template (en las plantillas)
+
+OPTIMIZACION POR SITIO
+    RECETAS
+        1 NO DEJAR DJANGO EN DEBUG
+        2 SESSIONES (se manejan en db. solo se puede probar con carga de usuarios). agregar en settings.py lo siguiente
+            SESSION_ENGINE = 'django.contrib.session.backends.cache_db' <- se pierde sessiones
+            SESSION_ENGINE = 'django.contrib.session.backends.cache' <- no se pierden sessiones
+            CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+            agreger el snipe de codigo en el arch views
+
+PROCESOS ASINCRONOS
+    LA VELOCIDAD ES IMPORTANTE EN APLICACIONES WEB
+    hay tareas que son demoradas y es mejor sacarlas del hilo principal de la aplicacion
+    cuando:
+        generacion de contenido (pdf, imagenes, video, sonido, etc)
+        envios de email
+    CELERY:
+        instalar celery-with-redis, django-celery
+        agregar las lineas en settings
+        crear las tareas y llamarlas con tarea.dalay()
+        ejecutar con manage.py celeryd --loglevel=DEBUG
+        puede hacer tareas periodicas
+        para probar es muy dificil
+            TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuitRunner'
+            CELERY_ALWAYS_EAGER = True
+            BROKER_BACKEND = 'memory'
+
+======== CLASES DE NODE.JS ============
+para probar node se ejecuta con el mismo nombre y se puede probar las instrucciones de javascript
+
+node no es un servidor tradicional de peticion-respuesta
+
+librerias a instalar siempre en un ambiente de desarrollo:
+    supervisor (instalar con sudo).
+        install:
+            sudo npm install -g supervisor
+
+        EXE:
+            supervisor x.js
+    node-isnpector
+        install:
+            npm install -g node-inspector
+para produccion:
+    forever
+        install:
+            sudo npm install -g forever
+        exe: 
+            forever /usr/bin/node-inspector --web-port=9999
+    express.io
+        install:
+            npm install express.io --save
+    swig (platillas)
+        install:
+            npm install swig --save
+    connect-redis (cache)
+        install:
+            npm install connect-redis --save
+    underscore
+        install npm install underscore --save
+
+INICIO DE UN PORJECTO
+    "npm init" para iniciar un projecto
+    "npm install <libreria> --save" para instalar una libreria
+
+pregustas:
+    formularios de dajngo en node: node-formidable

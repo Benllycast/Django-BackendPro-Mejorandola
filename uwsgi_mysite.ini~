@@ -1,0 +1,53 @@
+##por recomendacion se ejecuta uwsgi en el root del virtualenv
+[uwsgi]
+##colocar la ruta completa hasta la carpeta del virtualenv
+my_dir_base = /home/benllycas/projectos/prueba
+##
+# usuario y grupo con que se ejecutara el uwsgi (crearlos si es necesario)
+uid = www-data
+gig = www-data
+
+#cambia el directorio de ejecucion en donde se encuentra el mange.py antes de cargar la aplicacion
+chdir = %(my_dir_base)/mysite
+
+#modulo wsgi a cargar
+module = mysite.wsgi:application
+
+#necesario para el PYHOME
+home = %(my_dir_base)
+
+#indica que el proceso maestro y no un spawn
+master = true
+
+#procesos gemelos a ejecutar (mirar en la documentacion)
+processes = 2
+
+#si no utiliza un servidor web y solo utiliza uwsgi para pruebas descomente la siguiente linea
+#http-socket = 127.0.0.1:8000
+
+#si se usa un servidor web como NGINX descomente SOLO UNA de las siguientes lineas 
+# uvicacion del socket unix si se ejecuta uwsgi en modo sockect.
+socket = %(my_dir_base)/tmp/mysite_uwsgi.sock		
+#socket = 127.0.0.1:8000 		# direccion a la cual escuchara uwsgi
+
+#cambia los permisos del socket
+chmod-socket = 664
+#si se ejecuta Nginx con diferente grupo de usuario
+#chmod-socket = 666
+
+#uvicacion del archivo pid del proceso uwsgi
+pidfile = %(my_dir_base)/pid/pid_mysite.pid
+
+#limpiar archivos de logs despues de detener el uwsgi
+#vacuum = true
+vacuum = false
+
+#numero maximo de peticiones a responder
+max-requests=5000
+
+#tamaño maximo permitido (bytes) de la peticion entrante
+buffer-size = 65535
+
+#para demonizar la ejecucion de uwsgi descomente lo siguiente
+#daemonize= %(my_dir_base)/logs/mysite.log
+#para detenerlo escriba en la terminal: uwsgi --stop /ruta/al/pid/archivo.pid
